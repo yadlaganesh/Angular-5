@@ -1,0 +1,96 @@
+<div class="container">
+  <form #employeeForm="ngForm" ngNativeValidate (ngSubmit)="saveEmployee(employee)">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+          <h3 class="panel-title">Create Employee</h3>
+      </div>
+      <div class="panel-body">
+          
+          <div class="form-group" [class.has-success]="fullNameControl.valid" [class.has-error]="fullNameControl.invalid && fullNameControl.touched">
+            <label for="fullName" class="control-label">Full Name</label>
+            <input type="text" [(ngModel)]="employee.name" name="fullName" required #fullNameControl="ngModel" id="fullName" class="form-control" />
+            <span class="help-block" *ngIf="fullNameControl.invalid && fullNameControl.touched">
+              Full name is required
+            </span>
+          </div>
+          <div ngModelGroup="passwordGroup" passwordGroup="ngModelGroup">
+              <div class="form-group" [class.has-error]="password.invalid && password.touched">
+                <label for="fullName" class="control-label">Password</label>
+                <input type="text"  [(ngModel)]="employee.password" name="password" required #password="ngModel" id="password" class="form-control" />
+                <span class="help-block" *ngIf="password.invalid && password.touched">
+                  password is required
+                </span> 
+              </div>
+              <div class="form-group" [class.has-success]="confirmpassword.valid && confirmpassword.touched">
+                <label for="fullName" class="control-label">Password</label>
+                <input type="text" appConfirmEqualValidator="password" [(ngModel)]="employee.confirmpassword" name="confirmpassword" required #confirmpassword="ngModel" id="confirmpassword" class="form-control" />
+              
+                <span class="help-block" *ngIf="confirmpassword.touched && confirmpassword.errors?.required">
+                  password is does not matched 
+                </span>
+              </div>
+          </div>
+          <div class="form-group" [class.has-error]="emailControl.invalid && emailControl.touched">
+              <label class="control-label" for="email">Email</label>
+              <input type="email" id="email" required name="email" [(ngModel)]="employee.email" #emailControl="ngModel" class="form-control" />
+              <span class="help-block" *ngIf="emailControl.invalid && emailControl.touched">Invalid email</span>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="number" [(ngModel)]="employee.phoneNumber" name="phoneNumber" id="phoneNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <div class="form-control">
+                <label class="radio-inline"><input type="radio" [(ngModel)]="employee.gender" name="gender" value="male" />Male</label>             
+                <label class="radio-inline"><input type="radio" [(ngModel)]="employee.gender"  name="gender" value="female" />Female</label>
+              </div>
+            </div> 
+            
+            <div class="form-group">
+              <label>Contact Preferences</label>
+              <div class="form-control">
+                <label class="radio-inline"><input required type="radio" [(ngModel)]="employee.contactPreference" name="contactPreference" value="phone" />Phone</label>             
+                <label class="radio-inline"><input required type="radio" [(ngModel)]="employee.contactPreference"  name="contactPreference" value="email" />Email</label>
+              </div>
+            </div> 
+            <div class="form-group">
+              <label>Is Active</label>
+              <div class="form-control" [class.has-error]="isActive.invalid && isActive.touched">
+                <label class="checkbox-inline"><input type="checkbox" #isActive="ngModel" required [(ngModel)]="employee.isActive" name="isActive"/>Is Active</label>             
+              </div>
+              <span class="help-block" *ngIf="isActive.touched && isActive.errors?.required">Is Active is required</span>
+            </div> 
+            <div class="form-group" [class.has-error]="department.touched && department.invalid">
+              <label for="department" class="control-label">Department</label>
+               <select id="department" appSelectValidator #department="ngModel" required name="department" [(ngModel)]="employee.department" class="form-control">
+                <option value="-1">Select Department</option>
+                <option *ngFor="let dept of departMents" [value]="dept.id">{{dept.name}}</option>
+                </select>
+                <span class="help-block" *ngIf="department.touched && department.errors?.defaultSelected">Department is required</span>
+            </div>
+            <div class="form-group">
+              <label for="dateOfBirth">Date of Birth</label>
+              <input type="text" [(ngModel)]="employee.dateOfBirth" bsDatepicker name="dateOfBirth" id="dateOfBirth" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="photoPath">Photo Path</label>
+              <input type="text" [(ngModel)]="employee.photoPath" name="photoPath" id="photoPath" class="form-control" />
+            </div>
+            <div class="form-group" >
+             <button class="btn btn-primary" type="button" (click)="photoPathToggle()" *ngIf="employee.photoPath">{{photoPathView?'Hide':'Show'}} Photo</button>
+            </div>
+            <div class="form-group" >
+              <img [src]="employee.photoPath" class="img-responsive" *ngIf="photoPathView" alt="No Image Found"/>
+            </div>
+      </div>
+      <div class="panel-footer">
+          <button type="submit" [disabled]="employeeForm.invalid" class="btn btn-primary">
+            Save
+          </button>
+        </div>
+    </div>
+  </form>
+  {{employeeForm.value | json}}
+  {{employee.value | json}}
+</div>
